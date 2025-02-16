@@ -6,7 +6,7 @@ export interface TransactionResponse {
   id: number;
   description: string;
   value: number;
-  valueInBRL: number;
+  valueInBaseCurrency: number;
   type: string;
   date: string;
   category: Category;
