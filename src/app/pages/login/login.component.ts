@@ -18,7 +18,6 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    debugger;
     console.log(this.username);
     console.log(this.password);
     this.authService.login(this.username, this.password).subscribe({
