@@ -1,0 +1,270 @@
+// Define colors and fonts
+$primary-color: #007BFF;
+$secondary-color: #1E1E1E;
+$button-color: #28a745;
+$text-color: #fff;
+$font-stack: 'Arial', sans-serif;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-stack;
+  background-color: #f4f4f4;
+}
+
+.header-auth {
+  background: $secondary-color;
+  padding: 15px 0;
+  color: $text-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    width: 80%;
+    max-width: 1200px;
+
+    .balance-container {
+      width: fit-content;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      max-width: 200px;
+      width: 100%;
+
+
+      .btn-visibility {
+        font-size: 1rem;
+        vertical-align: middle;
+      }
+
+      .btn-visibility:hover {
+        font-size: 1rem;
+        color: rgb(177, 33, 33);
+        vertical-align: middle;
+      }
+    }
+
+    .select-form {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+
+      label {
+        display: block;
+
+        margin: 10px
+      }
+
+      select:focus>option:checked {
+        background: #000 !important;
+        color: white;
+      }
+
+
+
+      .select-header-auth {
+
+        padding: 10px;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #ffffff00;
+        border: 2px solid #ddd;
+        border: none;
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+        option {
+          padding: 10px;
+          font-size: 16px;
+          color: #333;
+          background-color: #fff;
+
+
+
+        }
+
+
+
+        :focus {
+          border: none;
+        }
+      }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    h2 {
+      margin: 0px;
+      padding: 0px 0px;
+    }
+
+
+  }
+
+  .logo {
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      padding: none;
+      margin: 0px;
+
+      span {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .nav {
+    ul {
+      list-style: none;
+      display: flex;
+
+      li {
+        margin: 0 15px;
+
+        a {
+          text-decoration: none;
+          color: $text-color;
+          font-size: 16px;
+          transition: color 0.3s ease-in-out;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .cta-button {
+    background: $button-color;
+    color: $text-color;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+
+    &:hover {
+      background: darken($button-color, 10%);
+    }
+  }
+}
+
+.header {
+  background: $secondary-color;
+  padding: 15px 0;
+  color: $text-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+
+    padding: 0 20px;
+  }
+
+  .logo {
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      padding: none;
+      margin: 0px;
+
+      span {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .nav {
+    ul {
+      list-style: none;
+      display: flex;
+
+      li {
+        margin: 0 15px;
+
+        a {
+          text-decoration: none;
+          color: $text-color;
+          font-size: 16px;
+          transition: color 0.3s ease-in-out;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .cta-button {
+    background: $button-color;
+    color: $text-color;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+
+    &:hover {
+      background: darken($button-color, 10%);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .header {
+    .container {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .nav {
+      ul {
+        flex-direction: column;
+
+        li {
+          margin: 10px 0;
+        }
+      }
+    }
+
+    .cta-button {
+      margin-top: 10px;
+    }
+  }
+}

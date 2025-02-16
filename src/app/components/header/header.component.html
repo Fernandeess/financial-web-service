@@ -1,0 +1,49 @@
+<header class="header-auth">
+  <div class="container">
+    @if( authService.isAuthenticated() ){
+    <span class="select-form"
+      ><h2>Olá seja bem vindo {{ firstName }} ✨</h2>
+
+      <label>Selecione a conta </label>
+      <select required class="select-header-auth">
+        @for (item of accountList; track $index) {
+        <option [value]="item.id">{{ item.accountName }}</option>
+        }
+      </select>
+    </span>
+
+    <span class="balance-container">
+      <button (click)="updateVisibility()" mat-icon-button>
+        <mat-icon class="btn-visibility">{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <h2 class="balance-info">
+        @if(!hidePassword){
+
+        {{ getBalance() }}
+        }@else {
+        {{ getBalanceVisibilityOff() }}
+        }
+      </h2>
+    </span>
+    <button [matMenuTriggerFor]="menu" mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item>Item 2</button>
+    </mat-menu>
+    } @else {
+    <nav class="nav">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="cta-button">Get Started</button>
+    }
+  </div>
+</header>
