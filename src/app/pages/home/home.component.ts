@@ -14,6 +14,8 @@ import { Currency } from '../../enum/currency.enum';
 import { CurrencyFormatPipe } from '../../pipe/currency-format.pipe';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AccountResponse } from '../../interfaces/account-response';
+import { CategoryExpense } from '../../interfaces/category-expense';
+import { CategoryExpendingValuesComponent } from '../../components/category-expending-values/category-expending-values.component';
 
 @Component({
   standalone: true,
@@ -27,14 +29,15 @@ import { AccountResponse } from '../../interfaces/account-response';
     MatTableModule,
     CommonModule,
     CurrencyFormatPipe,
+    CategoryExpendingValuesComponent,
   ],
 })
 export class HomeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  categoryExpenses: CategoryExpense[] = [];
   displayedColumns: string[] = [
     'value',
-    'valueInBRL',
+    'valueInBaseCurrency',
     'description',
     'type',
     'date',
@@ -74,6 +77,8 @@ export class HomeComponent implements OnInit {
       if (accList.length != 0) {
         this.accountSelected = accList[0];
       }
+
+      this.getSpendingByCategory();
     }
 
     this.getTransactions(0, this.pageSize);
@@ -87,7 +92,7 @@ export class HomeComponent implements OnInit {
   getTransactions(pageIndex: number, pageSize: number) {
     this.http
       .get<Page<TransactionResponse>>(
-        `transactions?startDate=${this.startDate}&endDate=${this.endDate}&accountId=636bb19a-1c13-4a0b-a37f-ded95d7fa50c&page=${pageIndex}&size=${pageSize}`
+        `transactions?startDate=${this.startDate}&endDate=${this.endDate}&accountId=${this.accountSelected?.id}&page=${pageIndex}&size=${pageSize}`
       )
       .subscribe({
         next: (value) => {
@@ -103,5 +108,15 @@ export class HomeComponent implements OnInit {
 
   onPageChange(event: PageEvent) {
     this.getTransactions(event.pageIndex, event.pageSize);
+  }
+
+  getSpendingByCategory() {
+    this.http
+      .get<CategoryExpense[]>(`accounts/${this.accountSelected?.id}/dashboard`)
+      .subscribe({
+        next: (value) => {
+          this.categoryExpenses = value;
+        },
+      });
   }
 }

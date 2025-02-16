@@ -1,25 +1,34 @@
 <div class="home">
   <div class="container">
     <div class="cards-container">
-      <app-card-info class="cards"> </app-card-info>
+      <app-card-info [tipo]="'Gasto Mensal'" class="cards"> </app-card-info>
       <app-card-info class="cards"> </app-card-info>
       <app-card-info class="cards"> </app-card-info>
       <app-card-info class="cards"> </app-card-info>
     </div>
+    <h2>Gastos por categoria:</h2>
+    <div class="categories-expenses">
+      @for (item of this.categoryExpenses; track $index) {
+      <app-category-expending-values
+        [value]="item.value"
+        [name]="item.name"
+      ></app-category-expending-values>
+      }
+    </div>
     <div>
+      <h2>Historico de transações:</h2>
       <div class="transactionList">
         <table mat-table [dataSource]="pageResponse.content">
           <ng-container matColumnDef="value">
             <th mat-header-cell *matHeaderCellDef>Valor</th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.value | currencyFormat : element.currency }}
-            </td>
+            <td mat-cell *matCellDef="let element">R$ {{ element.value }}</td>
           </ng-container>
-          <ng-container matColumnDef="valueInBRL">
-            <th mat-header-cell *matHeaderCellDef>Valor Convertido para BRL</th>
+          <ng-container matColumnDef="valueInBaseCurrency">
+            <th mat-header-cell *matHeaderCellDef>Valor Original</th>
             <td mat-cell *matCellDef="let element">
-              @if(element.valueInBRL != null){ R${{
-                element.valueInBRL.toFixed(2)
+              @if(element.valueInBaseCurrency != null){
+              {{
+                element.valueInBaseCurrency.toFixed(2) + " " + element.currency
               }}
               }@else { - }
             </td>
@@ -54,7 +63,7 @@
           <ng-container matColumnDef="category">
             <th mat-header-cell *matHeaderCellDef>Categoria</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.category.name }}
+              {{ element.category.icon + " " + element.category.name }}
             </td>
           </ng-container>
           <tr
