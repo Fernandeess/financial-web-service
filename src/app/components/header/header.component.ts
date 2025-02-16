@@ -36,11 +36,6 @@ export class HeaderComponent implements OnInit {
   firstName: String = '';
   constructor(public authService: AuthService, private http: HttpService) {}
   ngOnInit(): void {
-    const storedUser = sessionStorage.getItem('user');
-    if (storedUser) {
-      this.loginResponse = JSON.parse(storedUser) as LoginResponse;
-      this.firstName = this.loginResponse?.user?.name?.split(' ')[0] || '';
-    }
     this.getAccountList();
   }
 
@@ -49,6 +44,17 @@ export class HeaderComponent implements OnInit {
   }
 
   getAccountList() {
+    if (this.loginResponse == null) {
+      if (this.authService.isAuthenticated()) {
+        const storedUser = sessionStorage.getItem('user');
+        if (storedUser) {
+          this.loginResponse = JSON.parse(storedUser) as LoginResponse;
+          this.firstName = this.loginResponse?.user?.name?.split(' ')[0] || '';
+        }
+
+        this.getAccountList();
+      }
+    }
     this.http
       .get<AccountResponse[]>(
         `accounts?email=${this.loginResponse?.user.email}`
