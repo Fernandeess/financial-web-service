@@ -1,11 +1,33 @@
 <div class="home">
   <div class="container">
+    <div class="card flex justify-content-center">
+      <p-floatLabel style="width: fit-content; margin-bottom: 20px">
+        <p-calendar
+          id="dateRange"
+          (onClose)="onDateSelect()"
+          [(ngModel)]="rangeDates"
+          selectionMode="range"
+          [showIcon]="true"
+          [readonlyInput]="false"
+          placeholder="Selecione um período"
+          inputId="date_range"
+        />
+        <label for="date_range">Selecione um período:</label>
+      </p-floatLabel>
+    </div>
     <div class="cards-container">
-      <app-card-info [tipo]="'Gasto Mensal'" class="cards"> </app-card-info>
+      <app-card-info
+        [tipo]="'Gasto'"
+        [value]="expenseValueOverSelectedPeriod"
+        class="cards"
+      >
+      </app-card-info>
       <app-card-info class="cards"> </app-card-info>
       <app-card-info class="cards"> </app-card-info>
       <app-card-info class="cards"> </app-card-info>
     </div>
+
+    @if (this.categoryExpenses.length == 0) { } @else {
     <h2>Gastos por categoria:</h2>
     <div class="categories-expenses">
       @for (item of this.categoryExpenses; track $index) {
@@ -15,6 +37,8 @@
       ></app-category-expending-values>
       }
     </div>
+    }
+
     <div>
       <h2>Historico de transações:</h2>
       <div class="transactionList">
