@@ -2,25 +2,14 @@ import { AccountResponse } from './../../interfaces/account-response';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginResponse } from '../../interfaces/LoginResponse';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
+
 import { HttpService } from '../../services/http.service';
 import { FormsModule } from '@angular/forms';
 
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    MatSelectModule,
-    MatFormFieldModule,
-    FormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-  ],
+  imports: [FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

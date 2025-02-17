@@ -14,9 +14,9 @@
 
     <span class="balance-container">
       <button (click)="updateVisibility()" mat-icon-button>
-        <mat-icon class="btn-visibility">{{
+        <!-- <mat-icon class="btn-visibility">{{
           hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        }}</mat-icon> -->
       </button>
       <h2 class="balance-info">
         @if(!hidePassword){
@@ -27,12 +27,12 @@
         }
       </h2>
     </span>
-    <button [matMenuTriggerFor]="menu" mat-icon-button>
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button (click)="logout()" mat-menu-item>Logout</button>
-    </mat-menu>
+    <!-- <button [matMenuTriggerFor]="menu" mat-icon-button> -->
+    <!-- <mat-icon>more_vert</mat-icon> -->
+    <!-- </button> -->
+    <!-- <mat-menu #menu="matMenu"> -->
+    <!-- <button (click)="logout()" mat-menu-item>Logout</button> -->
+    <!-- </mat-menu> -->
     } @else {
     <nav class="nav">
       <ul>

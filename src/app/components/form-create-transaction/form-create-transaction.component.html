@@ -1,0 +1,73 @@
+<form>
+  <div>
+    <label for="value">Valor</label>
+    <p-inputNumber
+      id="value"
+      [(ngModel)]="formRequestData.value"
+      mode="decimal"
+      name="value"
+      inputId="withoutgrouping"
+    />
+
+    <label for="description">Descrição</label>
+    <input
+      pInputText
+      id="description"
+      [(ngModel)]="formRequestData.description"
+      name="description"
+    />
+
+    <label for="status">Status</label>
+    <p-selectButton
+      id="status"
+      name="status"
+      [options]="statusOptions"
+      [(ngModel)]="formRequestData.status"
+      optionLabel="label"
+      optionValue="value"
+    />
+
+    <label for="type">Tipo</label>
+    <p-selectButton
+      id="type"
+      name="type"
+      [options]="typeOptions"
+      [(ngModel)]="formRequestData.type"
+      optionLabel="label"
+      optionValue="value"
+    />
+  </div>
+
+  <div>
+    <label for="paymentMethod">Método de Pagamento</label>
+    <p-selectButton
+      id="paymentMethod"
+      name="paymentMethod"
+      [options]="paymentOptions"
+      [(ngModel)]="formRequestData.paymentMethod"
+      optionLabel="label"
+      optionValue="value"
+    />
+
+    <label for="category">Categoria</label>
+    <p-dropdown
+      id="category"
+      name="category"
+      [options]="categoriesList"
+      [(ngModel)]="formRequestData.categoryId"
+      optionLabel="name"
+      optionValue="id"
+      placeholder="Selecione a Categoria"
+    />
+
+    <label for="parcelas">Parcelas</label>
+    <p-inputNumber
+      id="parcelas"
+      [(ngModel)]="formRequestData.value"
+      mode="decimal"
+      [minFractionDigits]="0"
+      [maxFractionDigits]="36"
+      name="parcelas"
+    />
+  </div>
+</form>

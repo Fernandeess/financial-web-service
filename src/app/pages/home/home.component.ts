@@ -3,12 +3,7 @@ import { Page } from './../../interfaces/page';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LoginResponse } from '../../interfaces/LoginResponse';
 import { CardInfoComponent } from '../../components/card-info/card-info.component';
-import { MatTableModule } from '@angular/material/table';
-import {
-  MatPaginatorModule,
-  PageEvent,
-  MatPaginator,
-} from '@angular/material/paginator';
+import { TableModule } from 'primeng/table';
 import { HttpService } from '../../services/http.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AccountResponse } from '../../interfaces/account-response';
@@ -17,6 +12,16 @@ import { CategoryExpendingValuesComponent } from '../../components/category-expe
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { FormCreateTransactionComponent } from '../../components/form-create-transaction/form-create-transaction.component';
+
+interface PageEvent {
+  first: number;
+  rows: number;
+  page: number;
+  pageCount: number;
+}
 
 @Component({
   standalone: true,
@@ -25,19 +30,19 @@ import { FloatLabelModule } from 'primeng/floatlabel';
   styleUrls: ['./home.component.scss'],
   providers: [DatePipe],
   imports: [
-    CardInfoComponent,
-    MatPaginatorModule,
-    MatTableModule,
     CommonModule,
-    FloatLabelModule,
-    CategoryExpendingValuesComponent,
-    CalendarModule,
     FormsModule,
+    CalendarModule,
+    FloatLabelModule,
+    DialogModule,
+    CardInfoComponent,
+    CategoryExpendingValuesComponent,
+    FormCreateTransactionComponent,
+    TableModule,
+    PaginatorModule,
   ],
 })
 export class HomeComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
   displayedColumns: string[] = [
     'value',
     'valueInBaseCurrency',
@@ -47,6 +52,10 @@ export class HomeComponent implements OnInit {
     'category',
   ];
 
+  first: number = 0;
+  rows: number = 10;
+
+  createTransactionDialog: boolean = true;
   now = new Date();
   startDate = new Date(this.now.getFullYear(), this.now.getMonth(), 1);
   endDate = new Date(this.now.getFullYear(), this.now.getMonth() + 1, 0);
@@ -89,24 +98,45 @@ export class HomeComponent implements OnInit {
     this.calculateTotalExpenses();
   }
 
-  getTransactions(pageIndex: number, pageSize: number): void {
-    if (!this.accountSelected) return;
-
+  getTransactions(pageIndex: number, pageSize: number) {
     this.http
       .get<Page<TransactionResponse>>(
-        `transactions?startDate=${this.formatDate(this.rangeDates[0])}
-        &endDate=${this.formatDate(this.rangeDates[1])}
-        &accountId=${this.accountSelected.id}
-        &page=${pageIndex}&size=${pageSize}`
+        `transactions?start=${this.rangeDates[0]
+          .toISOString()
+          .replace('Z', '')}&end=${this.formatDate(
+          this.rangeDates[1]
+        )}&accountId=${
+          this.accountSelected?.id
+        }&page=${pageIndex}&size=${pageSize}`
       )
       .subscribe({
-        next: (response) => (this.pageResponse = response),
-        error: (err) => console.error('Erro ao buscar transações:', err),
+        next: (value) => {
+          this.pageResponse = value;
+          console.log('Resposta da API:', value);
+          console.log('Resposta pageResponse:', this.pageResponse);
+        },
+        error: (err) => {
+          console.error('Erro ao buscar transações:', err);
+        },
       });
   }
 
-  onPageChange(event: PageEvent): void {
-    this.getTransactions(event.pageIndex, event.pageSize);
+  onPageChange(event: any): void {
+    console.log(event);
+
+    // Ensure valid event object
+    if (!event || event.rows === 0) return;
+
+    // Calculate the new page number
+    const pageIndex = Math.floor(event.first / event.rows);
+    const pageSize = event.rows;
+
+    // Update the pageResponse values
+    this.pageResponse.page.number = pageIndex;
+    this.pageResponse.page.size = pageSize;
+
+    // Fetch updated data from the API
+    this.getTransactions(pageIndex, pageSize);
   }
 
   getSpendingByCategory(): void {
@@ -151,5 +181,9 @@ export class HomeComponent implements OnInit {
 
   private formatDate(date: Date): string {
     return date.toISOString().replace('Z', '');
+  }
+
+  showDialogCreateTransaction() {
+    this.createTransactionDialog = true;
   }
 }
