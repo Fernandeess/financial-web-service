@@ -1,38 +1,40 @@
 <header class="header-auth">
   <div class="container">
     @if( authService.isAuthenticated() ){
-    <span class="select-form"
-      ><h2>Olá seja bem vindo {{ firstName }} ✨</h2>
+    <nav class="nav-auth">
+      <span class="select-form"
+        ><h2>Olá seja bem vindo {{ firstName }} ✨</h2>
+        <label>Selecione a conta </label>
+        <select required class="select-header-auth">
+          @for (item of accountList; track $index) {
+          <option [value]="item.id">{{ item.accountName }}</option>
+          }
+        </select>
+      </span>
+      <a routerLink="/cards"> 💳 Meus Cartões </a>
+      <span class="balance-container">
+        <p-button
+          (onClick)="updateVisibility()"
+          icon="pi {{ hidePassword ? 'pi-eye-slash' : 'pi-eye' }}"
+          [rounded]="true"
+          [text]="true"
+        />
+        <h2 class="balance-info">
+          @if(!hidePassword){
 
-      <label>Selecione a conta </label>
-      <select required class="select-header-auth">
-        @for (item of accountList; track $index) {
-        <option [value]="item.id">{{ item.accountName }}</option>
-        }
-      </select>
-    </span>
-    <span class="balance-container">
+          {{ getBalance() }}
+          }@else {
+          {{ getBalanceVisibilityOff() }}
+          }
+        </h2>
+      </span>
+      <p-menu #menu [model]="items" [popup]="true" />
       <p-button
-        (onClick)="updateVisibility()"
-        icon="pi {{ hidePassword ? 'pi-eye-slash' : 'pi-eye' }}"
-        [rounded]="true"
         [text]="true"
+        (onClick)="menu.toggle($event)"
+        icon="pi pi-ellipsis-v"
       />
-      <h2 class="balance-info">
-        @if(!hidePassword){
-
-        {{ getBalance() }}
-        }@else {
-        {{ getBalanceVisibilityOff() }}
-        }
-      </h2>
-    </span>
-    <p-menu #menu [model]="items" [popup]="true" />
-    <p-button
-      [text]="true"
-      (onClick)="menu.toggle($event)"
-      icon="pi pi-ellipsis-v"
-    />
+    </nav>
     } @else {
     <nav class="nav">
       <ul>
