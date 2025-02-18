@@ -5,15 +5,19 @@ import { LoginResponse } from '../../interfaces/LoginResponse';
 
 import { HttpService } from '../../services/http.service';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ButtonModule, MenuModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
+  items: MenuItem[] | undefined;
   updateVisibility() {
     this.hidePassword = !this.hidePassword;
     this.getAccountList();
@@ -25,6 +29,9 @@ export class HeaderComponent implements OnInit {
   firstName: String = '';
   constructor(public authService: AuthService, private http: HttpService) {}
   ngOnInit(): void {
+    this.items = [
+      { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() },
+    ];
     this.getAccountList();
   }
 

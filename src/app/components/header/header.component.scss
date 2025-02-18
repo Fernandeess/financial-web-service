@@ -42,11 +42,21 @@ body {
       max-width: 200px;
       width: 100%;
 
+      .p-button-text.btn-visibility {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
 
       .btn-visibility {
-        font-size: 1rem;
-        vertical-align: middle;
+        background: none !important; // Remove o background
+        border: none !important; // Remove a borda
+        box-shadow: none !important; // Remove qualquer sombra ao redor
+        outline: none !important; // Remove contorno ao focar
+        padding: 0 !important; // Ajusta o espaçamento
       }
+
+
 
       .btn-visibility:hover {
         font-size: 1rem;

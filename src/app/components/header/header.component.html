@@ -11,13 +11,13 @@
         }
       </select>
     </span>
-
     <span class="balance-container">
-      <button (click)="updateVisibility()" mat-icon-button>
-        <!-- <mat-icon class="btn-visibility">{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon> -->
-      </button>
+      <p-button
+        (onClick)="updateVisibility()"
+        icon="pi {{ hidePassword ? 'pi-eye-slash' : 'pi-eye' }}"
+        [rounded]="true"
+        [text]="true"
+      />
       <h2 class="balance-info">
         @if(!hidePassword){
 
@@ -27,12 +27,12 @@
         }
       </h2>
     </span>
-    <!-- <button [matMenuTriggerFor]="menu" mat-icon-button> -->
-    <!-- <mat-icon>more_vert</mat-icon> -->
-    <!-- </button> -->
-    <!-- <mat-menu #menu="matMenu"> -->
-    <!-- <button (click)="logout()" mat-menu-item>Logout</button> -->
-    <!-- </mat-menu> -->
+    <p-menu #menu [model]="items" [popup]="true" />
+    <p-button
+      [text]="true"
+      (onClick)="menu.toggle($event)"
+      icon="pi pi-ellipsis-v"
+    />
     } @else {
     <nav class="nav">
       <ul>
