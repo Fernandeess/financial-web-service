@@ -1,6 +1,5 @@
 <div class="category-expense">
-  <span> R$ {{ value }} </span>
-  <span>
-    {{ name }}
-  </span>
+  <img width="24px" [src]="category?.icon" alt="" />
+  <span>R$ {{ category?.value?.toFixed(2) }}</span>
+  <!-- <span>{{ category?.name }}</span> -->
 </div>

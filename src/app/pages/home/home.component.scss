@@ -1,11 +1,21 @@
-// @import 'src/styles/material-overrides';
+.td_saida {
+  color: red !important;
+}
 
-// @include table-overrides((
-//   background-color: orange,
-//   header-headline-color: red,
-// ));
+.td_entrada {
+  color: green !important;
+}
 
+.td_category {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  img {
+    margin-left: 10px;
+    width: 20px;
+  }
+}
 
 .home {
   padding: 40px 0;
@@ -16,83 +26,61 @@
 
   table {
     .mat-header-row {
-      background-color: red($color: #db2f2f);
       height: 32px;
-      /* Altura reduzida do cabeçalho */
     }
 
     .mat-header-cell {
       font-size: 12px;
-      /* Tamanho da fonte menor */
       padding: 4px 8px;
-      /* Reduz o espaçamento interno */
     }
 
-    margin: 0px 30px 0px 30px;
 
-    td {
-      text-align: left;
-      vertical-align: middle;
-    }
 
     th {
+      background-color: #0e7a00 !important;
       text-align: left;
       vertical-align: middle;
     }
   }
 
-  .container {
-    .filter-tab {
-      display: flex;
-      justify-content: space-between;
-    }
 
-    .categories-expenses {
-      display: flex;
-      margin: 10px 0px;
-    }
 
-    .header-home {
 
-      display: flex;
-      justify-content: space-between;
+  .filter-tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px 0px 20px 0px;
+  }
 
-      .balance-info {
-        color: #0e7a00;
-      }
-
-    }
-
-    width: 90%;
-    max-width: 1200px;
-    padding: 0 20px;
-
-    h2 {
-      font-size: 1.8rem;
-    }
-
-    .cards-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      /* Uma única coluna responsiva */
-      gap: 15px;
-      /* Espaçamento entre os cartões */
-      justify-content: center;
-      /* Centraliza os itens */
-      align-items: stretch;
-      /* Mantém a altura igual */
-      padding: 20px;
-      /* Espaçamento interno */
-
-      margin: 0 auto;
-      /* Centraliza horizontalmente */
-
-      .cards {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-    }
+  .categories-expenses {
+    display: flex;
+    margin: 10px 0px 20px 0px;
 
   }
+
+  .header-home {
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  .cards-container {
+    display: flex;
+
+    margin: 0px 0px 20px 0px;
+
+    .cards {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+
 }

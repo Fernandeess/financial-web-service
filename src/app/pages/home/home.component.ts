@@ -69,6 +69,7 @@ export class HomeComponent implements OnInit {
     page: { totalElements: 10, totalPages: 0, size: 10, number: 0 },
   };
   expenseValueOverSelectedPeriod = 0;
+  incomeValueOverSelectedPeriod = 0;
   firstName = '';
   totalElements = 0;
   pageSize = 10;
@@ -96,6 +97,7 @@ export class HomeComponent implements OnInit {
   private refreshDashboardData(): void {
     this.getSpendingByCategory();
     this.calculateTotalExpenses();
+    this.calculateTotalIncome();
   }
 
   getTransactions(pageIndex: number, pageSize: number) {
@@ -153,15 +155,27 @@ export class HomeComponent implements OnInit {
 
     this.http
       .get<number>(
-        `accounts/${
-          this.accountSelected.id
-        }/dashboard/expense?start=${this.formatDate(
+        `accounts/${this.accountSelected.id}/dashboard?start=${this.formatDate(
           this.rangeDates[0]
-        )}&end=${this.formatDate(this.rangeDates[1])}`
+        )}&end=${this.formatDate(this.rangeDates[1])}&type=EXPENSE`
       )
       .subscribe({
         next: (total) => (this.expenseValueOverSelectedPeriod = total),
         error: (err) => console.error('Erro ao calcular despesas totais:', err),
+      });
+  }
+  calculateTotalIncome(): void {
+    if (!this.accountSelected) return;
+
+    this.http
+      .get<number>(
+        `accounts/${this.accountSelected.id}/dashboard?start=${this.formatDate(
+          this.rangeDates[0]
+        )}&end=${this.formatDate(this.rangeDates[1])}&type=INCOME`
+      )
+      .subscribe({
+        next: (total) => (this.incomeValueOverSelectedPeriod = total),
+        error: (err) => console.error('Erro ao calcular renda total:', err),
       });
   }
 

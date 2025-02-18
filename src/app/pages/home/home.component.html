@@ -7,7 +7,7 @@
 
   <div class="container">
     <div class="filter-tab">
-      <p-floatLabel style="width: fit-content; margin-bottom: 20px">
+      <p-floatLabel>
         <p-calendar
           id="dateRange"
           (onClose)="onDateSelect()"
@@ -29,14 +29,17 @@
     </div>
     <div class="cards-container">
       <app-card-info
-        [tipo]="'Gasto'"
+        [tipo]="'Saidas'"
         [value]="expenseValueOverSelectedPeriod"
         class="cards"
       >
       </app-card-info>
-      <app-card-info class="cards"> </app-card-info>
-      <app-card-info class="cards"> </app-card-info>
-      <app-card-info class="cards"> </app-card-info>
+      <app-card-info
+        [tipo]="'Entrada'"
+        [value]="incomeValueOverSelectedPeriod"
+        class="cards"
+      >
+      </app-card-info>
     </div>
 
     @if (this.categoryExpenses.length == 0) { } @else {
@@ -44,8 +47,7 @@
     <div class="categories-expenses">
       @for (item of this.categoryExpenses; track $index) {
       <app-category-expending-values
-        [value]="item.value"
-        [name]="item.name"
+        [category]="item"
       ></app-category-expending-values>
       }
     </div>
@@ -54,23 +56,33 @@
     <div>
       <h2>Historico de transações:</h2>
       <div class="transactionList">
-        <p-table [value]="pageResponse.content">
+        <p-table [value]="pageResponse.content" tableStyleClass="table_test">
           >
           <ng-template pTemplate="header">
             <tr>
-              <th>Valor</th>
+              <th style="background-color: rgb(233, 233, 233)">Valor R$</th>
               <th>Valor Original</th>
-              <th>ID</th>
-              <th>Descrição</th>
-              <th>Tipo</th>
+              <th style="background-color: rgb(233, 233, 233)">Descrição</th>
               <th>Data</th>
-              <th>Categoria</th>
+              <th style="background-color: rgb(233, 233, 233)">Categoria</th>
             </tr>
           </ng-template>
 
           <ng-template pTemplate="body" let-element>
             <tr>
-              <td>R$ {{ element.value }}</td>
+              <td>
+                <ng-container *ngIf="element.type === 'EXPENSE'">
+                  <span class="td_saida">
+                    -{{ element.value.toFixed(2).replace(".", ",") }}
+                  </span>
+                </ng-container>
+                <ng-container *ngIf="element.type === 'INCOME'">
+                  <span class="td_entrada"
+                    >{{ element.value.toFixed(2).replace(".", ",") }}
+                  </span>
+                </ng-container>
+              </td>
+
               <td>
                 <ng-container
                   *ngIf="element.valueInBaseCurrency !== null; else noValue"
@@ -83,11 +95,16 @@
                 </ng-container>
                 <ng-template #noValue>-</ng-template>
               </td>
-              <td>{{ element.id }}</td>
+
               <td>{{ element.description }}</td>
-              <td>{{ element.type }}</td>
+
               <td>{{ element.date | date : "dd/MM/yyyy HH:mm" }}</td>
-              <td>{{ element.category.icon + " " + element.category.name }}</td>
+              <td>
+                <span class="td_category">
+                  {{ element.category.name }}
+                  <img [src]="element.category.icon" alt="" />
+                </span>
+              </td>
             </tr>
           </ng-template>
         </p-table>
