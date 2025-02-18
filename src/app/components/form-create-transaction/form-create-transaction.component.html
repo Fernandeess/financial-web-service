@@ -1,73 +1,150 @@
-<form>
-  <div>
-    <label for="value">Valor</label>
-    <p-inputNumber
-      id="value"
-      [(ngModel)]="formRequestData.value"
-      mode="decimal"
-      name="value"
-      inputId="withoutgrouping"
-    />
+<p-dialog
+  header="Adicionar Transação"
+  [modal]="true"
+  [draggable]="false"
+  [(visible)]="createTransactionDialog"
+  class="dialog"
+  (onHide)="close()"
+>
+  <form>
+    <div>
+      <span>
+        <label for="currency">Valor</label>
+        <p-inputNumber
+          [(ngModel)]="formRequestData.value"
+          inputId="locale-br"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          name="currency"
+          [minFractionDigits]="2"
+        />
+      </span>
+      <span class="id-time">
+        <label for="data">Selecione a data</label>
+        <p-calendar
+          id="data"
+          class="small-calendar"
+          [(ngModel)]="date"
+          [showTime]="true"
+          [showButtonBar]="true"
+        ></p-calendar>
+      </span>
 
-    <label for="description">Descrição</label>
-    <input
-      pInputText
-      id="description"
-      [(ngModel)]="formRequestData.description"
-      name="description"
-    />
+      <!-- <span>
+        <label for="time">Selecione o horário</label>
+        <p-calendar
+          id="time"
+          class="small-time-input"
+          [(ngModel)]="dateTime"
+          [timeOnly]="true"
+          [hourFormat]="'24'"
+          [showButtonBar]="true"
+        ></p-calendar>
+      </span> -->
 
-    <label for="status">Status</label>
-    <p-selectButton
-      id="status"
-      name="status"
-      [options]="statusOptions"
-      [(ngModel)]="formRequestData.status"
-      optionLabel="label"
-      optionValue="value"
-    />
+      <span>
+        <label for="description">Descrição</label>
+        <input
+          pInputText
+          id="description"
+          [(ngModel)]="formRequestData.description"
+          name="description"
+        />
+      </span>
+      <span>
+        <label for="category">Categoria</label>
+        <p-dropdown
+          id="category"
+          name="category"
+          [options]="categoriesList"
+          [(ngModel)]="formRequestData.categoryId"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Selecione a Categoria"
+        />
+      </span>
 
-    <label for="type">Tipo</label>
-    <p-selectButton
-      id="type"
-      name="type"
-      [options]="typeOptions"
-      [(ngModel)]="formRequestData.type"
-      optionLabel="label"
-      optionValue="value"
-    />
-  </div>
+      <span
+        ><label for="currency">Moeda</label>
+        <p-selectButton
+          id="currency"
+          name="currency"
+          [options]="currencyOptions"
+          [(ngModel)]="formRequestData.currency"
+          optionLabel="label"
+          optionValue="value"
+      /></span>
 
-  <div>
-    <label for="paymentMethod">Método de Pagamento</label>
-    <p-selectButton
-      id="paymentMethod"
-      name="paymentMethod"
-      [options]="paymentOptions"
-      [(ngModel)]="formRequestData.paymentMethod"
-      optionLabel="label"
-      optionValue="value"
-    />
+      <span
+        ><label for="type">Tipo</label>
+        <p-selectButton
+          id="type"
+          name="type"
+          [options]="typeOptions"
+          [(ngModel)]="formRequestData.type"
+          optionLabel="label"
+          optionValue="value"
+      /></span>
 
-    <label for="category">Categoria</label>
-    <p-dropdown
-      id="category"
-      name="category"
-      [options]="categoriesList"
-      [(ngModel)]="formRequestData.categoryId"
-      optionLabel="name"
-      optionValue="id"
-      placeholder="Selecione a Categoria"
-    />
+      <span
+        ><label for="status">Status</label>
+        <p-selectButton
+          id="status"
+          name="status"
+          [options]="statusOptions"
+          [(ngModel)]="formRequestData.status"
+          optionLabel="label"
+          optionValue="value"
+      /></span>
+      <span>
+        <label for="paymentMethod">Método de Pagamento</label>
+        <p-selectButton
+          id="paymentMethod"
+          name="paymentMethod"
+          [options]="paymentOptions"
+          [(ngModel)]="formRequestData.paymentMethod"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </span>
+      @if(this.formRequestData.paymentMethod == "CREDIT" ||
+      this.formRequestData.paymentMethod == "DEBIT"){<label for="cards"
+        >Cartões</label
+      >
+      <span>
+        <p-dropdown
+          id="cards"
+          name="cards"
+          [options]="cardList"
+          [(ngModel)]="formRequestData.cardId"
+          optionLabel="lastFourDigits"
+          optionValue="lastFourDigits"
+          placeholder="Selecione o cartão"
+        />
+      </span>
+      } @if(this.formRequestData.paymentMethod == "CREDIT"){
+      <span
+        ><label for="parcelas">Parcelas</label>
+        <p-inputNumber
+          id="parcelas"
+          [(ngModel)]="formRequestData.installments"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="36"
+          name="parcelas"
+      /></span>
 
-    <label for="parcelas">Parcelas</label>
-    <p-inputNumber
-      id="parcelas"
-      [(ngModel)]="formRequestData.value"
-      mode="decimal"
-      [minFractionDigits]="0"
-      [maxFractionDigits]="36"
-      name="parcelas"
+      }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      (onClick)="createTransaction()"
+      label="Criar"
+      [outlined]="true"
+      severity="secondary"
     />
-  </div>
-</form>
+  </ng-template>
+</p-dialog>

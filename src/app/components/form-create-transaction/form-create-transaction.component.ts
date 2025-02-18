@@ -1,12 +1,23 @@
 import { HttpService } from './../../services/http.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TransactionRequest } from '../../interfaces/transaction-request';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { CommonModule, Time } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { Category } from '../../interfaces/category';
 import { DropdownModule } from 'primeng/dropdown';
+import { AuthService } from '../../services/auth.service';
+import { AccountResponse } from '../../interfaces/account-response';
+import { CardResponse } from '../../interfaces/card-response';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-form-create-transaction',
@@ -16,15 +27,22 @@ import { DropdownModule } from 'primeng/dropdown';
     CommonModule,
     InputNumberModule,
     SelectButtonModule,
+    DialogModule,
     DropdownModule,
+    ButtonModule,
+    CalendarModule,
   ],
   templateUrl: './form-create-transaction.component.html',
   styleUrl: './form-create-transaction.component.scss',
 })
 export class FormCreateTransactionComponent implements OnInit {
+  @Input() createTransactionDialog: boolean = true;
+  @Input() account?: AccountResponse;
+  @Output() closeDialog = new EventEmitter<void>();
+  showBtn: boolean = true;
   categoriesList: any[] = [];
-  statusOptions: any[] = [
-    { label: 'RECEITA', value: 'REVENUE' },
+  cardList: CardResponse[] = [];
+  typeOptions: any[] = [
     { label: 'DESPESA', value: 'EXPENSE' },
     { label: 'RENDA', value: 'INCOME' },
   ];
@@ -44,7 +62,7 @@ export class FormCreateTransactionComponent implements OnInit {
     { label: 'Outros', value: 'OTHER' },
     { label: 'Pix', value: 'PIX' },
   ];
-  typeOptions: any[] = [
+  statusOptions: any[] = [
     { label: 'PENDENTE', value: 'PENDING' },
     { label: 'EM PROCESSO', value: 'PROCESSING' },
   ];
@@ -61,9 +79,13 @@ export class FormCreateTransactionComponent implements OnInit {
     cardId: '',
     accountId: '',
   };
-  constructor(private http: HttpService) {}
+  date: Date = new Date();
+
+  constructor(private http: HttpService, private auth: AuthService) {}
+
   ngOnInit(): void {
     this.getCategoriesList();
+    this.getCardList();
   }
   getCategoriesList() {
     this.http.get<Category[]>('category').subscribe({
@@ -71,5 +93,54 @@ export class FormCreateTransactionComponent implements OnInit {
         this.categoriesList = value;
       },
     });
+  }
+  getCardList() {
+    console.log(this.account?.cardList);
+    this.cardList = this.account?.cardList || [];
+  }
+
+  createTransaction() {
+    var data = this.formRequestData;
+    if (data.value <= 0) {
+      console.error('Value must be greater than zero.');
+      return;
+    }
+
+    if (!data.description || data.description.trim() === '') {
+      console.error('Description is required.');
+      return;
+    }
+
+    if (!data.transactionTime || isNaN(Date.parse(data.transactionTime))) {
+      console.error('Transaction time is invalid.');
+      return;
+    }
+
+    if (data.installments < 0) {
+      console.error('Installments must be at least 0.');
+      return;
+    }
+
+    if (!data.accountId || data.accountId.trim() === '') {
+      console.error('Account ID is required.');
+      return;
+    }
+
+    data.accountId = this.account?.id || '';
+    data.transactionTime = this.date.toISOString().replace('Z', '');
+
+    this.http.post('transactions', data).subscribe({
+      next: (value) => {
+        this.close();
+        console.log(value);
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
+
+  close() {
+    this.closeDialog.emit();
   }
 }

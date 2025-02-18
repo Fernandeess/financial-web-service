@@ -34,7 +34,7 @@ interface PageEvent {
     FormsModule,
     CalendarModule,
     FloatLabelModule,
-    DialogModule,
+
     CardInfoComponent,
     CategoryExpendingValuesComponent,
     FormCreateTransactionComponent,
@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   first: number = 0;
   rows: number = 10;
 
-  createTransactionDialog: boolean = true;
+  createTransactionDialog: boolean = false;
   now = new Date();
   startDate = new Date(this.now.getFullYear(), this.now.getMonth(), 1);
   endDate = new Date(this.now.getFullYear(), this.now.getMonth() + 1, 0);
@@ -122,20 +122,11 @@ export class HomeComponent implements OnInit {
   }
 
   onPageChange(event: any): void {
-    console.log(event);
-
-    // Ensure valid event object
     if (!event || event.rows === 0) return;
-
-    // Calculate the new page number
     const pageIndex = Math.floor(event.first / event.rows);
     const pageSize = event.rows;
-
-    // Update the pageResponse values
     this.pageResponse.page.number = pageIndex;
     this.pageResponse.page.size = pageSize;
-
-    // Fetch updated data from the API
     this.getTransactions(pageIndex, pageSize);
   }
 
@@ -185,5 +176,9 @@ export class HomeComponent implements OnInit {
 
   showDialogCreateTransaction() {
     this.createTransactionDialog = true;
+  }
+
+  closeDialog() {
+    this.createTransactionDialog = false;
   }
 }

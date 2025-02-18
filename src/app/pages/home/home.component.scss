@@ -42,6 +42,11 @@
   }
 
   .container {
+    .filter-tab {
+      display: flex;
+      justify-content: space-between;
+    }
+
     .categories-expenses {
       display: flex;
       margin: 10px 0px;

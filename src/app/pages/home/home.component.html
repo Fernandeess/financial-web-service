@@ -1,16 +1,12 @@
 <div class="home">
-  <p-dialog
-    header="Edit Profile"
-    [modal]="true"
-    [draggable]="false"
-    [(visible)]="createTransactionDialog"
-    [style]="{ width: '60rem' }"
-  >
-    <app-form-create-transaction></app-form-create-transaction>
-  </p-dialog>
+  <app-form-create-transaction
+    [account]="accountSelected"
+    [createTransactionDialog]="createTransactionDialog"
+    (closeDialog)="closeDialog()"
+  ></app-form-create-transaction>
 
   <div class="container">
-    <div class="card flex justify-content-center">
+    <div class="filter-tab">
       <p-floatLabel style="width: fit-content; margin-bottom: 20px">
         <p-calendar
           id="dateRange"
@@ -24,7 +20,12 @@
         />
         <label for="date_range">Selecione um período:</label>
       </p-floatLabel>
-      <p-button (onClick)="showDialogCreateTransaction()" label="Show" />
+
+      <p-button
+        id="creates-transaction"
+        (onClick)="showDialogCreateTransaction()"
+        label="Criar Transação"
+      />
     </div>
     <div class="cards-container">
       <app-card-info
