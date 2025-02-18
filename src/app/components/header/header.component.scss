@@ -39,8 +39,70 @@ body {
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      max-width: 200px;
-      width: 100%;
+      width: fit-content;
+
+      .balance-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        h2 {
+          text-align: center;
+        }
+
+      }
+
+      span {
+        margin: 0px 20px;
+
+
+      }
+
+      .select-form {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+
+        label {
+          display: block;
+
+          margin: 10px
+        }
+
+        select:focus>option:checked {
+          background: #000 !important;
+          color: white;
+        }
+
+        .select-header-auth {
+          padding: 10px;
+          font-size: 16px;
+          color: #ffffff;
+          background-color: #ffffff00;
+          border: 2px solid #ddd;
+          border: none;
+          outline: none;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+          option {
+            padding: 10px;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+
+
+
+          }
+
+          :focus {
+            border: none;
+          }
+        }
+
+
+      }
 
       .p-button-text.btn-visibility {
         background: transparent !important;
@@ -56,8 +118,6 @@ body {
         padding: 0 !important; // Ajusta o espaçamento
       }
 
-
-
       .btn-visibility:hover {
         font-size: 1rem;
         color: rgb(177, 33, 33);
@@ -65,73 +125,10 @@ body {
       }
     }
 
-    .select-form {
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 12px;
-
-      label {
-        display: block;
-
-        margin: 10px
-      }
-
-      select:focus>option:checked {
-        background: #000 !important;
-        color: white;
-      }
-
-
-
-      .select-header-auth {
-
-        padding: 10px;
-        font-size: 16px;
-        color: #ffffff;
-        background-color: #ffffff00;
-        border: 2px solid #ddd;
-        border: none;
-        outline: none;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-        option {
-          padding: 10px;
-          font-size: 16px;
-          color: #333;
-          background-color: #fff;
-
-
-
-        }
-
-
-
-        :focus {
-          border: none;
-        }
-      }
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
     h2 {
       margin: 0px;
       padding: 0px 0px;
     }
-
 
   }
 
@@ -174,7 +171,7 @@ body {
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
 
     a {
