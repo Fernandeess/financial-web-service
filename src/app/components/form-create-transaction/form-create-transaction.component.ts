@@ -2,12 +2,7 @@ import { HttpService } from './../../services/http.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TransactionRequest } from '../../interfaces/transaction-request';
 import { CommonModule, Time } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  Validators,
-} from '@angular/forms';
+
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { Category } from '../../interfaces/category';
@@ -18,12 +13,17 @@ import { CardResponse } from '../../interfaces/card-response';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-form-create-transaction',
   standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
     InputNumberModule,
     SelectButtonModule,
@@ -31,6 +31,7 @@ import { CalendarModule } from 'primeng/calendar';
     DropdownModule,
     ButtonModule,
     CalendarModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './form-create-transaction.component.html',
   styleUrl: './form-create-transaction.component.scss',
@@ -79,14 +80,37 @@ export class FormCreateTransactionComponent implements OnInit {
     cardId: '',
     accountId: '',
   };
+  transactionForm!: FormGroup;
   date: Date = new Date();
 
-  constructor(private http: HttpService, private auth: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpService,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
+    this.initForm();
     this.getCategoriesList();
     this.getCardList();
   }
+
+  private initForm() {
+    this.transactionForm = this.fb.group({
+      value: [0, [Validators.required, Validators.min(0.01)]],
+      description: ['', [Validators.required, Validators.minLength(3)]],
+      status: ['', Validators.required],
+      type: ['', Validators.required],
+      paymentMethod: ['', Validators.required],
+      currency: ['', Validators.required],
+      categoryId: [null, Validators.required],
+      transactionTime: [new Date(), Validators.required],
+      installments: [1, [Validators.required, Validators.min(0)]],
+      cardId: [''],
+      accountId: [''],
+    });
+  }
+
   getCategoriesList() {
     this.http.get<Category[]>('category').subscribe({
       next: (value) => {
@@ -100,36 +124,15 @@ export class FormCreateTransactionComponent implements OnInit {
   }
 
   createTransaction() {
-    var data = this.formRequestData;
-    if (data.value <= 0) {
-      console.error('Value must be greater than zero.');
-      return;
-    }
+    const formData: TransactionRequest = {
+      ...this.transactionForm.value,
+      transactionTime: new Date(
+        this.transactionForm.value.transactionTime
+      ).toISOString(),
+      accountId: this.account?.id || '',
+    };
 
-    if (!data.description || data.description.trim() === '') {
-      console.error('Description is required.');
-      return;
-    }
-
-    if (!data.transactionTime || isNaN(Date.parse(data.transactionTime))) {
-      console.error('Transaction time is invalid.');
-      return;
-    }
-
-    if (data.installments < 0) {
-      console.error('Installments must be at least 0.');
-      return;
-    }
-
-    if (!data.accountId || data.accountId.trim() === '') {
-      console.error('Account ID is required.');
-      return;
-    }
-
-    data.accountId = this.account?.id || '';
-    data.transactionTime = this.date.toISOString().replace('Z', '');
-
-    this.http.post('transactions', data).subscribe({
+    this.http.post('transactions', formData).subscribe({
       next: (value) => {
         this.close();
         console.log(value);

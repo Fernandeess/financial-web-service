@@ -6,7 +6,7 @@
   class="dialog"
   (onHide)="close()"
 >
-  <form>
+  <!-- <form>
     <div>
       <span>
         <label for="currency">Valor</label>
@@ -30,18 +30,6 @@
           [showButtonBar]="true"
         ></p-calendar>
       </span>
-
-      <!-- <span>
-        <label for="time">Selecione o horário</label>
-        <p-calendar
-          id="time"
-          class="small-time-input"
-          [(ngModel)]="dateTime"
-          [timeOnly]="true"
-          [hourFormat]="'24'"
-          [showButtonBar]="true"
-        ></p-calendar>
-      </span> -->
 
       <span>
         <label for="description">Descrição</label>
@@ -137,14 +125,196 @@
 
       }
     </div>
+  </form> -->
+  <form [formGroup]="transactionForm">
+    <div>
+      <!-- Valor -->
+      <span>
+        <label for="currency">Valor</label>
+        <p-inputNumber
+          formControlName="value"
+          inputId="locale-br"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          name="currency"
+          [minFractionDigits]="2"
+        />
+        <small
+          class="p-error"
+          *ngIf="
+            transactionForm.controls['value'].invalid &&
+            transactionForm.controls['value'].touched
+          "
+        >
+          O valor deve ser maior que zero.
+        </small>
+      </span>
+
+      <!-- Data -->
+      <span class="id-time">
+        <label for="data">Selecione a data</label>
+        <p-calendar
+          id="data"
+          class="small-calendar"
+          formControlName="transactionTime"
+          [showTime]="true"
+          [showButtonBar]="true"
+        ></p-calendar>
+        <small
+          class="p-error"
+          *ngIf="
+            transactionForm.controls['transactionTime'].invalid &&
+            transactionForm.controls['transactionTime'].touched
+          "
+        >
+          Selecione uma data válida.
+        </small>
+      </span>
+
+      <!-- Descrição -->
+      <span>
+        <label for="description">Descrição</label>
+        <input
+          pInputText
+          id="description"
+          formControlName="description"
+          name="description"
+        />
+        <small
+          class="p-error"
+          *ngIf="
+            transactionForm.controls['description'].invalid &&
+            transactionForm.controls['description'].touched
+          "
+        >
+          A descrição é obrigatória e deve ter pelo menos 3 caracteres.
+        </small>
+      </span>
+
+      <!-- Categoria -->
+      <span>
+        <label for="category">Categoria</label>
+        <p-dropdown
+          id="category"
+          name="category"
+          [options]="categoriesList"
+          formControlName="categoryId"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Selecione a Categoria"
+        />
+        <small
+          class="p-error"
+          *ngIf="
+            transactionForm.controls['categoryId'].invalid &&
+            transactionForm.controls['categoryId'].touched
+          "
+        >
+          Escolha uma categoria.
+        </small>
+      </span>
+
+      <!-- Moeda -->
+      <span>
+        <label for="currency">Moeda</label>
+        <p-selectButton
+          id="currency"
+          name="currency"
+          [options]="currencyOptions"
+          formControlName="currency"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </span>
+
+      <!-- Tipo -->
+      <span>
+        <label for="type">Tipo</label>
+        <p-selectButton
+          id="type"
+          name="type"
+          [options]="typeOptions"
+          formControlName="type"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </span>
+
+      <!-- Status -->
+      <span>
+        <label for="status">Status</label>
+        <p-selectButton
+          id="status"
+          name="status"
+          [options]="statusOptions"
+          formControlName="status"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </span>
+
+      <!-- Método de Pagamento -->
+      <span>
+        <label for="paymentMethod">Método de Pagamento</label>
+        <p-selectButton
+          id="paymentMethod"
+          name="paymentMethod"
+          [options]="paymentOptions"
+          formControlName="paymentMethod"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </span>
+
+      <!-- Se o método de pagamento for Crédito ou Débito, exibir dropdown de Cartões -->
+      @if (this.transactionForm.controls['paymentMethod'].value == "CREDIT" ||
+      this.transactionForm.controls['paymentMethod'].value == "DEBIT") {
+      <span>
+        <label for="cards">Cartões</label>
+        <p-dropdown
+          id="cards"
+          name="cards"
+          [options]="cardList"
+          formControlName="cardId"
+          optionLabel="lastFourDigits"
+          optionValue="id"
+          placeholder="Selecione o cartão"
+        />
+      </span>
+      }
+
+      <!-- Se for Crédito, exibir campo de Parcelas -->
+      @if (this.transactionForm.controls['paymentMethod'].value == "CREDIT") {
+      <span>
+        <label for="parcelas">Parcelas</label>
+        <p-inputNumber
+          id="parcelas"
+          formControlName="installments"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="36"
+          name="parcelas"
+        />
+      </span>
+      }
+    </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button
-      (onClick)="createTransaction()"
-      label="Criar"
-      [outlined]="true"
-      severity="secondary"
-    />
+    <div class="footer">
+      <!-- <p-button
+        (onClick)="close()"
+        label="Close"
+        [outlined]="true"
+        severity="secondary"
+      /> -->
+      <p-button
+        (onClick)="createTransaction()"
+        label="Criar"
+        [outlined]="true"
+        severity="secondary"
+      />
+    </div>
   </ng-template>
 </p-dialog>
