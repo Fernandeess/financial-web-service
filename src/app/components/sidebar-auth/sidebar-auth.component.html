@@ -1,0 +1,47 @@
+<p-sidebar [(visible)]="visible" [showCloseIcon]="false" [baseZIndex]="10000">
+  <div class="sidebar-header">
+    <h2>FinanceApp</h2>
+    <button
+      pButton
+      icon="pi pi-times"
+      class="p-button-text close-btn"
+      (click)="toggleSidebar()"
+    ></button>
+  </div>
+
+  <div class="sidebar-menu">
+    <ul>
+      <li
+        (click)="navigateTo('/home')"
+        routerLink="/home"
+        routerLinkActive="active"
+      >
+        <i class="pi pi-home"></i>
+        <span>Inicio</span>
+      </li>
+      <li
+        (click)="navigateTo('/account')"
+        routerLink="/accounts"
+        routerLinkActive="active"
+      >
+        <i class="pi pi-wallet"></i>
+        <span>Contas</span>
+      </li>
+      <li
+        (click)="navigateTo('/cards')"
+        routerLink="/cards"
+        routerLinkActive="active"
+      >
+        <i class="pi pi-credit-card"></i>
+        <span>Cartões</span>
+      </li>
+    </ul>
+  </div>
+</p-sidebar>
+
+<button
+  pButton
+  icon="pi pi-bars"
+  class="menu-btn"
+  (click)="toggleSidebar()"
+></button>
