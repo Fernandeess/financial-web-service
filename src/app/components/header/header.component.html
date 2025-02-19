@@ -16,8 +16,6 @@
           </select>
         </span>
 
-        <span> <a routerLink="/cards"> 💳 Meus Cartões </a></span>
-
         <span class="balance-info">
           <p-button
             (onClick)="updateVisibility()"
@@ -46,6 +44,9 @@
       </span>
     </nav>
     } @else {
+    <div class="header-section about">
+      <h2>Financial<span>Service</span></h2>
+    </div>
     <nav class="nav">
       <ul>
         <li><a href="#">Home</a></li>

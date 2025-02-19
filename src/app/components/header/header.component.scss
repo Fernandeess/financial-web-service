@@ -16,6 +16,65 @@ body {
   background-color: #f4f4f4;
 }
 
+
+h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+
+  span {
+    color: $primary-color;
+  }
+}
+
+// .select-form {
+//   padding: 20px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   border-radius: 12px;
+//   background-color: #ffffff00;
+
+//   label {
+//     display: block;
+
+//     margin: 10px
+//   }
+
+//   select:focus>option:checked {
+//     background: #000 !important;
+//     color: white;
+//   }
+
+//   .select-header-auth {
+//     padding: 10px;
+//     font-size: 16px;
+//     color: #ffffff;
+//     background-color: #ffffff00;
+//     border: 2px solid #ddd;
+//     border: none;
+//     outline: none;
+//     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+//     option {
+//       padding: 10px;
+//       font-size: 16px;
+//       color: #333;
+//       background-color: #fff;
+
+
+
+//     }
+
+//     :focus {
+//       border: none;
+//     }
+//   }
+
+
+// }
+
+
+
 .header-auth {
   background: $secondary-color;
   padding: 15px 0;
@@ -41,6 +100,8 @@ body {
       justify-content: center;
       width: fit-content;
 
+
+
       .balance-info {
         display: flex;
         flex-direction: row;
@@ -53,56 +114,18 @@ body {
       }
 
       span {
-        margin: 0px 20px;
-
-
-      }
-
-      .select-form {
-        padding: 20px;
         display: flex;
-        justify-content: center;
+        margin: 0px 10px;
         align-items: center;
-        border-radius: 12px;
 
-        label {
-          display: block;
-
-          margin: 10px
-        }
-
-        select:focus>option:checked {
-          background: #000 !important;
-          color: white;
-        }
-
-        .select-header-auth {
-          padding: 10px;
-          font-size: 16px;
+        select {
+          padding: 5px;
           color: #ffffff;
-          background-color: #ffffff00;
-          border: 2px solid #ddd;
+          background-color: #1E1E1E;
           border: none;
-          outline: none;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-          option {
-            padding: 10px;
-            font-size: 16px;
-            color: #333;
-            background-color: #fff;
-
-
-
-          }
-
-          :focus {
-            border: none;
-          }
         }
-
-
       }
+
 
       .p-button-text.btn-visibility {
         background: transparent !important;
@@ -111,11 +134,11 @@ body {
       }
 
       .btn-visibility {
-        background: none !important; // Remove o background
-        border: none !important; // Remove a borda
-        box-shadow: none !important; // Remove qualquer sombra ao redor
-        outline: none !important; // Remove contorno ao focar
-        padding: 0 !important; // Ajusta o espaçamento
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+        padding: 0 !important;
       }
 
       .btn-visibility:hover {
