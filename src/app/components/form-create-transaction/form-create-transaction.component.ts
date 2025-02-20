@@ -124,11 +124,14 @@ export class FormCreateTransactionComponent implements OnInit {
   }
 
   createTransaction() {
+    const localDate = new Date(this.transactionForm.value.transactionTime);
+    const adjustedISODate = new Date(
+      localDate.getTime() - localDate.getTimezoneOffset() * 60000
+    ).toISOString();
+
     const formData: TransactionRequest = {
       ...this.transactionForm.value,
-      transactionTime: new Date(
-        this.transactionForm.value.transactionTime
-      ).toISOString(),
+      transactionTime: adjustedISODate,
       accountId: this.account?.id || '',
     };
 

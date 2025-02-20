@@ -1,27 +1,28 @@
-import { TransactionResponse } from './../../interfaces/transaction-response';
-import { Page } from './../../interfaces/page';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { LoginResponse } from '../../interfaces/LoginResponse';
-import { CardInfoComponent } from '../../components/card-info/card-info.component';
-import { TableModule } from 'primeng/table';
-import { HttpService } from '../../services/http.service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CalendarModule } from 'primeng/calendar';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { ChartModule } from 'primeng/chart';
+import { ChartData, ChartOptions } from 'chart.js';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { HttpService } from '../../services/http.service';
+import { LoginResponse } from '../../interfaces/LoginResponse';
 import { AccountResponse } from '../../interfaces/account-response';
 import { CategoryExpense } from '../../interfaces/category-expense';
+import { TransactionResponse } from '../../interfaces/transaction-response';
+import { Page } from '../../interfaces/page';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CardInfoComponent } from '../../components/card-info/card-info.component';
 import { CategoryExpendingValuesComponent } from '../../components/category-expending-values/category-expending-values.component';
-import { CalendarModule } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { DialogModule } from 'primeng/dialog';
-import { PaginatorModule } from 'primeng/paginator';
 import { FormCreateTransactionComponent } from '../../components/form-create-transaction/form-create-transaction.component';
-
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
-}
+import { FormEditTransactionComponent } from '../../components/form-edit-transaction/form-edit-transaction.component';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { Currency } from '../../enum/currency.enum';
 
 @Component({
   standalone: true,
@@ -34,15 +35,27 @@ interface PageEvent {
     FormsModule,
     CalendarModule,
     FloatLabelModule,
-
     CardInfoComponent,
     CategoryExpendingValuesComponent,
     FormCreateTransactionComponent,
     TableModule,
     PaginatorModule,
+    ChartModule,
+    MenuModule,
+    ButtonModule,
+    DialogModule,
+    FormEditTransactionComponent,
+    TieredMenuModule,
   ],
 })
 export class HomeComponent implements OnInit {
+  items: MenuItem[] | undefined;
+  dataDailyExpense: ChartData = this.initializeChartData();
+  optionsDailyExpense: ChartOptions = this.initializeChartOptions();
+
+  dataByCategory: ChartData = this.initializeChartData();
+  optionsByCategory: ChartOptions = this.initializeChartOptions();
+
   displayedColumns: string[] = [
     'value',
     'valueInBaseCurrency',
@@ -52,33 +65,82 @@ export class HomeComponent implements OnInit {
     'category',
   ];
 
-  first: number = 0;
-  rows: number = 10;
-
-  createTransactionDialog: boolean = false;
-  now = new Date();
-  startDate = new Date(this.now.getFullYear(), this.now.getMonth(), 1);
-  endDate = new Date(this.now.getFullYear(), this.now.getMonth() + 1, 0);
-  rangeDates: Date[] = [this.startDate, this.endDate];
-
+  first = 0;
+  rows = 10;
+  createTransactionDialog = false;
+  showDialogEditTransaction: boolean = false;
+  rangeDates: Date[] = this.initializeDateRange();
   loginResponse: LoginResponse | null = null;
   accountSelected?: AccountResponse;
   categoryExpenses: CategoryExpense[] = [];
-  pageResponse: Page<TransactionResponse> = {
-    content: [],
-    page: { totalElements: 10, totalPages: 0, size: 10, number: 0 },
-  };
+  pageResponse: Page<TransactionResponse> = this.initializePageResponse();
   expenseValueOverSelectedPeriod = 0;
   incomeValueOverSelectedPeriod = 0;
   firstName = '';
-  totalElements = 0;
   pageSize = 10;
+  selectedTransaction?: TransactionResponse = undefined;
 
-  constructor(private http: HttpService) {}
+  constructor(
+    private readonly http: HttpService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadUserSession();
-    this.getTransactions(0, this.pageSize);
+    this.loadInitialData();
+  }
+
+  private initializeChartData(): ChartData {
+    return {
+      labels: [],
+      datasets: [
+        {
+          label: 'Valor',
+          data: [],
+          backgroundColor: [],
+          borderColor: [],
+          borderWidth: 1,
+        },
+      ],
+    };
+  }
+
+  private initializeChartOptions(): ChartOptions {
+    return {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: undefined,
+          },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: undefined },
+          grid: { color: undefined },
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: undefined },
+          grid: { color: undefined },
+        },
+      },
+    };
+  }
+
+  private initializeDateRange(): Date[] {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return [startDate, endDate];
+  }
+
+  private initializePageResponse(): Page<TransactionResponse> {
+    return {
+      content: [],
+      page: { totalElements: 10, totalPages: 0, size: 10, number: 0 },
+    };
   }
 
   private loadUserSession(): void {
@@ -94,42 +156,74 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private refreshDashboardData(): void {
-    this.getSpendingByCategory();
-    this.calculateTotalExpenses();
-    this.calculateTotalIncome();
+  private loadInitialData(): void {
+    this.getTransactions(0, this.pageSize);
+    this.getTransactionsGroupedByDate();
   }
 
-  getTransactions(pageIndex: number, pageSize: number) {
+  private refreshDashboardData(): void {
+    this.getSpendingByCategory();
+    this.getTransactions(0, this.pageSize);
+    this.calculateTotalExpenses();
+    this.calculateTotalIncome();
+    this.getTransactionsGroupedByDate();
+  }
+
+  getTransactionsGroupedByDate(): void {
+    this.http
+      .get<{ value: number; label: Date }[]>(
+        `accounts/${
+          this.accountSelected?.id
+        }/dashboard/expense-per-day?start=${this.formatDate(
+          this.rangeDates[0]
+        )}&end=${this.formatDate(this.rangeDates[1])}`
+      )
+      .subscribe({
+        next: (response) => {
+          this.dataDailyExpense = {
+            ...this.dataDailyExpense,
+            labels: response.map((v) => {
+              var date = new Date(v.label + 'T00:00:00').toLocaleDateString(
+                'pt-BR'
+              );
+              var year = new Date().getFullYear();
+              var replaceVal = `/${year}`;
+              return date.toString().replace(replaceVal, '');
+            }),
+            datasets: [
+              {
+                ...this.dataDailyExpense.datasets[0],
+                data: response.map((v) => {
+                  return v.value;
+                }),
+                backgroundColor: ['#3B82F6'],
+              },
+            ],
+          };
+        },
+        error: (err) => console.error('Erro ao buscar transações:', err),
+      });
+  }
+
+  getTransactions(pageIndex: number, pageSize: number): void {
     this.http
       .get<Page<TransactionResponse>>(
-        `transactions?start=${this.rangeDates[0]
-          .toISOString()
-          .replace('Z', '')}&end=${this.formatDate(
-          this.rangeDates[1]
-        )}&accountId=${
+        `transactions?start=${this.formatDate(
+          this.rangeDates[0]
+        )}&end=${this.formatDate(this.rangeDates[1])}&accountId=${
           this.accountSelected?.id
         }&page=${pageIndex}&size=${pageSize}`
       )
       .subscribe({
-        next: (value) => {
-          this.pageResponse = value;
-          console.log('Resposta da API:', value);
-          console.log('Resposta pageResponse:', this.pageResponse);
-        },
-        error: (err) => {
-          console.error('Erro ao buscar transações:', err);
-        },
+        next: (value) => (this.pageResponse = value),
+        error: (err) => console.error('Erro ao buscar transações:', err),
       });
   }
 
   onPageChange(event: any): void {
     if (!event || event.rows === 0) return;
     const pageIndex = Math.floor(event.first / event.rows);
-    const pageSize = event.rows;
-    this.pageResponse.page.number = pageIndex;
-    this.pageResponse.page.size = pageSize;
-    this.getTransactions(pageIndex, pageSize);
+    this.getTransactions(pageIndex, event.rows);
   }
 
   getSpendingByCategory(): void {
@@ -144,7 +238,33 @@ export class HomeComponent implements OnInit {
         )}&end=${this.formatDate(this.rangeDates[1])}`
       )
       .subscribe({
-        next: (categories) => (this.categoryExpenses = categories),
+        next: (categories) => {
+          this.dataByCategory = {
+            labels: categories.map((v) => v.name),
+            datasets: [
+              {
+                label: 'Gastos por Categoria',
+                data: categories.map((v) => v.value),
+                backgroundColor: [
+                  '#FF6384', // Cor para cada fatia do gráfico
+                  '#36A2EB',
+                  '#FFCE56',
+                  '#4BC0C0',
+                  '#9966FF',
+                  '#FF9F40',
+                ],
+                hoverBackgroundColor: [
+                  '#FF6384CC',
+                  '#36A2EBCC',
+                  '#FFCE56CC',
+                  '#4BC0C0CC',
+                  '#9966FFCC',
+                  '#FF9F40CC',
+                ],
+              },
+            ],
+          };
+        },
         error: (err) =>
           console.error('Erro ao buscar gastos por categoria:', err),
       });
@@ -175,7 +295,7 @@ export class HomeComponent implements OnInit {
       )
       .subscribe({
         next: (total) => (this.incomeValueOverSelectedPeriod = total),
-        error: (err) => console.error('Erro ao calcular renda total:', err),
+        error: (err) => console.error('Erro ao calcular lucros totais:', err),
       });
   }
 
@@ -188,11 +308,47 @@ export class HomeComponent implements OnInit {
     return date.toISOString().replace('Z', '');
   }
 
-  showDialogCreateTransaction() {
+  showDialogCreateTransaction(): void {
     this.createTransactionDialog = true;
   }
 
-  closeDialog() {
+  closeDialogCreate(): void {
     this.createTransactionDialog = false;
+    this.refreshDashboardData();
+  }
+  closeDialogEdit(): void {
+    this.showDialogEditTransaction = false;
+  }
+  openDialogEdit(transaction: TransactionResponse) {
+    this.showDialogEditTransaction = true;
+
+    this.selectedTransaction = transaction;
+
+    this.cdr.detectChanges();
+  }
+
+  removeTransaction(transaction: TransactionResponse) {
+    this.http.delete(`transactions/${transaction.id}`).subscribe({
+      next: () => {},
+      error: (err) => console.error('Erro ao deletar transaction:', err),
+      complete: () => {
+        this.refreshDashboardData();
+      },
+    });
+  }
+
+  getItems(transaction: TransactionResponse): MenuItem[] {
+    return [
+      {
+        label: 'Editar',
+        icon: 'pi pi-pencil',
+        command: () => this.openDialogEdit(transaction),
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        command: () => this.removeTransaction(transaction),
+      },
+    ];
   }
 }

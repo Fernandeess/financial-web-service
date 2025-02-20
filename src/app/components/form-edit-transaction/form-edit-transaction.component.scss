@@ -1,0 +1,89 @@
+p-dialog {
+
+
+
+  .ui-dialog-titlebar {
+    background-color: #3f51b5;
+    color: #fff;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .ui-dialog-content {
+    padding: 1.5rem;
+  }
+
+  .p-field {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    input[pInputText] {
+      width: 500px;
+      padding: 0.5rem;
+      border: 1px solid #dcdcdc;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: #3f51b5;
+        outline: none;
+      }
+
+      &:disabled {
+        background-color: #f5f5f5;
+        color: #888;
+      }
+    }
+
+    p-dropdown {
+      width: 100%;
+    }
+  }
+
+  .p-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .p-button-secondary {
+      background-color: #9e9e9e;
+      border-color: #9e9e9e;
+      color: #fff;
+
+      &:hover {
+        background-color: #757575;
+        border-color: #757575;
+      }
+    }
+
+    .p-button-primary {
+      background-color: #3f51b5;
+      border-color: #3f51b5;
+      color: #fff;
+
+      &:hover {
+        background-color: #303f9f;
+        border-color: #303f9f;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ui-dialog {
+      width: 90%;
+    }
+
+    .p-dialog-footer {
+      flex-direction: column;
+      gap: 0.5rem;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

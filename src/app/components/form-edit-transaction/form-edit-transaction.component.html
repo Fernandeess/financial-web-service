@@ -1,0 +1,120 @@
+<p-dialog
+  header="Editar Transação"
+  [modal]="true"
+  [draggable]="false"
+  [(visible)]="showDialogEditTransaction"
+  (onHide)="close()"
+  [closable]="false"
+>
+  <div class="edit-dialog">
+    <ng-container *ngIf="transaction">
+      <form (ngSubmit)="save()">
+        <div class="p-field">
+          <label for="id">ID:</label>
+          <input
+            id="id"
+            type="text"
+            pInputText
+            [value]="transaction.id"
+            disabled
+          />
+        </div>
+        <div class="p-field">
+          <label for="description">Descrição:</label>
+          <input
+            id="description"
+            type="text"
+            pInputText
+            [(ngModel)]="transaction.description"
+            name="description"
+            required
+          />
+        </div>
+        <div class="p-field">
+          <label for="value">Valor:</label>
+          <input
+            id="value"
+            type="text"
+            pInputText
+            [value]="transaction.value | currency : transaction.currency"
+            disabled
+          />
+        </div>
+        <div class="p-field">
+          <label for="valueInBaseCurrency">Valor na Moeda Base:</label>
+          <input
+            id="valueInBaseCurrency"
+            type="text"
+            pInputText
+            [value]="transaction.valueInBaseCurrency | currency : 'BRL'"
+            disabled
+          />
+        </div>
+
+        <div class="p-field">
+          <label for="type">Tipo:</label>
+          <input
+            id="type"
+            type="text"
+            pInputText
+            [value]="transaction.type"
+            disabled
+          />
+        </div>
+
+        <div class="p-field">
+          <label for="date">Data:</label>
+          <input
+            id="date"
+            type="text"
+            pInputText
+            [value]="transaction.date | date : 'dd/MM/yyyy'"
+            disabled
+          />
+        </div>
+
+        <div class="p-field">
+          <label for="category">Categoria:</label>
+          <p-dropdown
+            id="category"
+            [options]="categoriesList"
+            optionLabel="name"
+            [(ngModel)]="transaction.category"
+            name="category"
+            placeholder="Selecione uma categoria"
+            required
+          ></p-dropdown>
+        </div>
+
+        <div class="p-field">
+          <label for="currency">Moeda:</label>
+          <input
+            id="currency"
+            type="text"
+            pInputText
+            [value]="transaction.currency"
+            disabled
+          />
+        </div>
+
+        <div class="p-dialog-footer">
+          <button
+            type="button"
+            pButton
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-secondary"
+            (click)="close()"
+          ></button>
+          <button
+            type="submit"
+            pButton
+            label="Salvar"
+            icon="pi pi-check"
+            class="p-button-primary"
+          ></button>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+</p-dialog>

@@ -6,129 +6,8 @@
   class="dialog"
   (onHide)="close()"
 >
-  <!-- <form>
-    <div>
-      <span>
-        <label for="currency">Valor</label>
-        <p-inputNumber
-          [(ngModel)]="formRequestData.value"
-          inputId="locale-br"
-          mode="currency"
-          currency="BRL"
-          locale="pt-BR"
-          name="currency"
-          [minFractionDigits]="2"
-        />
-      </span>
-      <span class="id-time">
-        <label for="data">Selecione a data</label>
-        <p-calendar
-          id="data"
-          class="small-calendar"
-          [(ngModel)]="date"
-          [showTime]="true"
-          [showButtonBar]="true"
-        ></p-calendar>
-      </span>
-
-      <span>
-        <label for="description">Descrição</label>
-        <input
-          pInputText
-          id="description"
-          [(ngModel)]="formRequestData.description"
-          name="description"
-        />
-      </span>
-      <span>
-        <label for="category">Categoria</label>
-        <p-dropdown
-          id="category"
-          name="category"
-          [options]="categoriesList"
-          [(ngModel)]="formRequestData.categoryId"
-          optionLabel="name"
-          optionValue="id"
-          placeholder="Selecione a Categoria"
-        />
-      </span>
-
-      <span
-        ><label for="currency">Moeda</label>
-        <p-selectButton
-          id="currency"
-          name="currency"
-          [options]="currencyOptions"
-          [(ngModel)]="formRequestData.currency"
-          optionLabel="label"
-          optionValue="value"
-      /></span>
-
-      <span
-        ><label for="type">Tipo</label>
-        <p-selectButton
-          id="type"
-          name="type"
-          [options]="typeOptions"
-          [(ngModel)]="formRequestData.type"
-          optionLabel="label"
-          optionValue="value"
-      /></span>
-
-      <span
-        ><label for="status">Status</label>
-        <p-selectButton
-          id="status"
-          name="status"
-          [options]="statusOptions"
-          [(ngModel)]="formRequestData.status"
-          optionLabel="label"
-          optionValue="value"
-      /></span>
-      <span>
-        <label for="paymentMethod">Método de Pagamento</label>
-        <p-selectButton
-          id="paymentMethod"
-          name="paymentMethod"
-          [options]="paymentOptions"
-          [(ngModel)]="formRequestData.paymentMethod"
-          optionLabel="label"
-          optionValue="value"
-        />
-      </span>
-      @if(this.formRequestData.paymentMethod == "CREDIT" ||
-      this.formRequestData.paymentMethod == "DEBIT"){<label for="cards"
-        >Cartões</label
-      >
-      <span>
-        <p-dropdown
-          id="cards"
-          name="cards"
-          [options]="cardList"
-          [(ngModel)]="formRequestData.cardId"
-          optionLabel="lastFourDigits"
-          optionValue="lastFourDigits"
-          placeholder="Selecione o cartão"
-        />
-      </span>
-      } @if(this.formRequestData.paymentMethod == "CREDIT"){
-      <span
-        ><label for="parcelas">Parcelas</label>
-        <p-inputNumber
-          id="parcelas"
-          [(ngModel)]="formRequestData.installments"
-          mode="decimal"
-          [minFractionDigits]="0"
-          [maxFractionDigits]="36"
-          name="parcelas"
-      /></span>
-
-      }
-    </div>
-  </form> -->
   <form [formGroup]="transactionForm">
     <div>
-      <!-- Valor -->
       <span>
         <label for="currency">Valor</label>
         <p-inputNumber
@@ -151,7 +30,6 @@
         </small>
       </span>
 
-      <!-- Data -->
       <span class="id-time">
         <label for="data">Selecione a data</label>
         <p-calendar
@@ -172,7 +50,6 @@
         </small>
       </span>
 
-      <!-- Descrição -->
       <span>
         <label for="description">Descrição</label>
         <input
@@ -192,7 +69,6 @@
         </small>
       </span>
 
-      <!-- Categoria -->
       <span>
         <label for="category">Categoria</label>
         <p-dropdown
@@ -215,7 +91,6 @@
         </small>
       </span>
 
-      <!-- Moeda -->
       <span>
         <label for="currency">Moeda</label>
         <p-selectButton
@@ -228,7 +103,6 @@
         />
       </span>
 
-      <!-- Tipo -->
       <span>
         <label for="type">Tipo</label>
         <p-selectButton
@@ -241,7 +115,6 @@
         />
       </span>
 
-      <!-- Status -->
       <span>
         <label for="status">Status</label>
         <p-selectButton
@@ -254,7 +127,6 @@
         />
       </span>
 
-      <!-- Método de Pagamento -->
       <span>
         <label for="paymentMethod">Método de Pagamento</label>
         <p-selectButton
@@ -267,7 +139,6 @@
         />
       </span>
 
-      <!-- Se o método de pagamento for Crédito ou Débito, exibir dropdown de Cartões -->
       @if (this.transactionForm.controls['paymentMethod'].value == "CREDIT" ||
       this.transactionForm.controls['paymentMethod'].value == "DEBIT") {
       <span>
@@ -282,10 +153,7 @@
           placeholder="Selecione o cartão"
         />
       </span>
-      }
-
-      <!-- Se for Crédito, exibir campo de Parcelas -->
-      @if (this.transactionForm.controls['paymentMethod'].value == "CREDIT") {
+      } @if (this.transactionForm.controls['paymentMethod'].value == "CREDIT") {
       <span>
         <label for="parcelas">Parcelas</label>
         <p-inputNumber
@@ -303,12 +171,6 @@
 
   <ng-template pTemplate="footer">
     <div class="footer">
-      <!-- <p-button
-        (onClick)="close()"
-        label="Close"
-        [outlined]="true"
-        severity="secondary"
-      /> -->
       <p-button
         (onClick)="createTransaction()"
         label="Criar"
