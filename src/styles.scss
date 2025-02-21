@@ -7,6 +7,15 @@ body {
   padding: 0;
   font-family: "Roboto", serif;
   background-color: #f8f9fa;
+
+
+  button:focus,
+  button:active,
+  .p-button:focus,
+  .p-button:active {
+    outline: none;
+    box-shadow: none;
+  }
 }
 
 h1,
@@ -23,4 +32,14 @@ h6 {
   width: 90%;
   max-width: 1200px;
   padding: 0 20px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }

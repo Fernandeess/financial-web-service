@@ -1,9 +1,9 @@
 <div>
-  <app-header></app-header>
-
+  @if ( authService.isAuthenticated() ) {
   <app-sidebar-auth> </app-sidebar-auth>
-
+  }@else {
+  <app-header></app-header>
   <router-outlet></router-outlet>
-
   <app-footer></app-footer>
+  }
 </div>

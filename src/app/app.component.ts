@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth.service';
 import { Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
@@ -29,4 +30,5 @@ export class AppComponent {
   }
 
   sidebarVisible: boolean = false;
+  constructor(public authService: AuthService) {}
 }
