@@ -48,40 +48,6 @@
       </app-card-info>
     </div>
 
-    <div class="chart-container">
-      <div class="chart-dailyExpense">
-        <h2>Histórico de Gastos Diários</h2>
-        <p-chart
-          class="bar"
-          type="bar"
-          [data]="dataDailyExpense"
-          [options]="optionsDailyExpense"
-          width="100%"
-        />
-      </div>
-      <div class="chart-Category">
-        <h2>Histórico de Gastos por categoria</h2>
-        <p-chart
-          class="pie"
-          type="pie"
-          [data]="dataByCategory"
-          [options]="optionsByCategory"
-          width="100%"
-        />
-      </div>
-    </div>
-
-    @if (this.categoryExpenses.length == 0) { } @else {
-    <h2>Gastos por categoria:</h2>
-    <div class="categories-expenses">
-      @for (item of this.categoryExpenses; track $index) {
-      <app-category-expending-values
-        [category]="item"
-      ></app-category-expending-values>
-      }
-    </div>
-    }
-
     <div>
       <div class="transactionList">
         <h2>Histórico de transações:</h2>

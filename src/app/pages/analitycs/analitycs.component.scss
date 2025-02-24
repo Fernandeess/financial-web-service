@@ -1,0 +1,72 @@
+.analitycs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 0px;
+
+
+  .filter-tab {
+    display: flex;
+    justify-content: start;
+    width: 80%;
+  }
+
+  .chart-container {
+    width: 80%;
+    margin: 20px 0;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .chart-dailyExpense,
+  .chart-Category {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .chart-dailyExpense {
+    flex: 1 1 60%;
+    min-width: 300px;
+  }
+
+  .chart-Category {
+    flex: 1 1 35%;
+    min-width: 300px;
+  }
+
+  .chart-dailyExpense h2,
+  .chart-Category h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+  }
+
+  .bar p-chart canvas {
+    height: 250px !important;
+    width: 100% !important;
+  }
+
+  .pie p-chart canvas {
+    height: 250px !important;
+    width: 100% !important;
+  }
+
+  /* Ajustes responsivos */
+  @media (max-width: 768px) {
+    .chart-container {
+      flex-direction: column;
+    }
+
+    .chart-dailyExpense,
+    .chart-Category {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+}

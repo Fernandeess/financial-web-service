@@ -1,0 +1,40 @@
+<div class="analitycs">
+  <div class="filter-tab container">
+    <p-floatLabel>
+      <p-calendar
+        id="dateRange"
+        (onClose)="onDateSelect()"
+        [(ngModel)]="rangeDates"
+        selectionMode="range"
+        [showIcon]="true"
+        [readonlyInput]="false"
+        placeholder="Selecione um período"
+        inputId="date_range"
+      />
+
+      <label for="date_range">Selecione um período:</label>
+    </p-floatLabel>
+  </div>
+  <div class="container chart-container">
+    <div class="chart-dailyExpense">
+      <h2>Histórico de Gastos Diários</h2>
+      <p-chart
+        class="bar"
+        type="bar"
+        [data]="dataDailyExpense"
+        [options]="optionsDailyExpense"
+        width="100%"
+      />
+    </div>
+    <div class="chart-Category">
+      <h2>Histórico de Gastos por categoria</h2>
+      <p-chart
+        class="pie"
+        type="pie"
+        [data]="dataByCategory"
+        [options]="optionsByCategory"
+        width="100%"
+      />
+    </div>
+  </div>
+</div>

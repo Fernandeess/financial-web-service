@@ -6,7 +6,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ChartModule } from 'primeng/chart';
-import { ChartData, ChartOptions } from 'chart.js';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { HttpService } from '../../services/http.service';
@@ -22,7 +21,6 @@ import { FormCreateTransactionComponent } from '../../components/form-create-tra
 import { FormEditTransactionComponent } from '../../components/form-edit-transaction/form-edit-transaction.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { Currency } from '../../enum/currency.enum';
 
 @Component({
   standalone: true,
@@ -50,11 +48,6 @@ import { Currency } from '../../enum/currency.enum';
 })
 export class HomeComponent implements OnInit {
   items: MenuItem[] | undefined;
-  dataDailyExpense: ChartData = this.initializeChartData();
-  optionsDailyExpense: ChartOptions = this.initializeChartOptions();
-
-  dataByCategory: ChartData = this.initializeChartData();
-  optionsByCategory: ChartOptions = this.initializeChartOptions();
 
   displayedColumns: string[] = [
     'value',
@@ -90,45 +83,6 @@ export class HomeComponent implements OnInit {
     this.loadInitialData();
   }
 
-  private initializeChartData(): ChartData {
-    return {
-      labels: [],
-      datasets: [
-        {
-          label: 'Valor',
-          data: [],
-          backgroundColor: [],
-          borderColor: [],
-          borderWidth: 1,
-        },
-      ],
-    };
-  }
-
-  private initializeChartOptions(): ChartOptions {
-    return {
-      responsive: true,
-      plugins: {
-        legend: {
-          labels: {
-            color: undefined,
-          },
-        },
-      },
-      scales: {
-        x: {
-          ticks: { color: undefined },
-          grid: { color: undefined },
-        },
-        y: {
-          beginAtZero: true,
-          ticks: { color: undefined },
-          grid: { color: undefined },
-        },
-      },
-    };
-  }
-
   private initializeDateRange(): Date[] {
     const now = new Date();
     const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -158,51 +112,12 @@ export class HomeComponent implements OnInit {
 
   private loadInitialData(): void {
     this.getTransactions(0, this.pageSize);
-    this.getTransactionsGroupedByDate();
   }
 
   private refreshDashboardData(): void {
-    this.getSpendingByCategory();
     this.getTransactions(0, this.pageSize);
     this.calculateTotalExpenses();
     this.calculateTotalIncome();
-    this.getTransactionsGroupedByDate();
-  }
-
-  getTransactionsGroupedByDate(): void {
-    this.http
-      .get<{ value: number; label: Date }[]>(
-        `accounts/${
-          this.accountSelected?.id
-        }/dashboard/expense-per-day?start=${this.formatDate(
-          this.rangeDates[0]
-        )}&end=${this.formatDate(this.rangeDates[1])}`
-      )
-      .subscribe({
-        next: (response) => {
-          this.dataDailyExpense = {
-            ...this.dataDailyExpense,
-            labels: response.map((v) => {
-              var date = new Date(v.label + 'T00:00:00').toLocaleDateString(
-                'pt-BR'
-              );
-              var year = new Date().getFullYear();
-              var replaceVal = `/${year}`;
-              return date.toString().replace(replaceVal, '');
-            }),
-            datasets: [
-              {
-                ...this.dataDailyExpense.datasets[0],
-                data: response.map((v) => {
-                  return v.value;
-                }),
-                backgroundColor: ['#3B82F6'],
-              },
-            ],
-          };
-        },
-        error: (err) => console.error('Erro ao buscar transações:', err),
-      });
   }
 
   getTransactions(pageIndex: number, pageSize: number): void {
@@ -224,50 +139,6 @@ export class HomeComponent implements OnInit {
     if (!event || event.rows === 0) return;
     const pageIndex = Math.floor(event.first / event.rows);
     this.getTransactions(pageIndex, event.rows);
-  }
-
-  getSpendingByCategory(): void {
-    if (!this.accountSelected) return;
-
-    this.http
-      .get<CategoryExpense[]>(
-        `accounts/${
-          this.accountSelected.id
-        }/dashboard/category?start=${this.formatDate(
-          this.rangeDates[0]
-        )}&end=${this.formatDate(this.rangeDates[1])}`
-      )
-      .subscribe({
-        next: (categories) => {
-          this.dataByCategory = {
-            labels: categories.map((v) => v.name),
-            datasets: [
-              {
-                label: 'Gastos por Categoria',
-                data: categories.map((v) => v.value),
-                backgroundColor: [
-                  '#FF6384', // Cor para cada fatia do gráfico
-                  '#36A2EB',
-                  '#FFCE56',
-                  '#4BC0C0',
-                  '#9966FF',
-                  '#FF9F40',
-                ],
-                hoverBackgroundColor: [
-                  '#FF6384CC',
-                  '#36A2EBCC',
-                  '#FFCE56CC',
-                  '#4BC0C0CC',
-                  '#9966FFCC',
-                  '#FF9F40CC',
-                ],
-              },
-            ],
-          };
-        },
-        error: (err) =>
-          console.error('Erro ao buscar gastos por categoria:', err),
-      });
   }
 
   calculateTotalExpenses(): void {

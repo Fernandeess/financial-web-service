@@ -1,3 +1,26 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: red($color: #000000);
+  width: 100%;
+}
+
+.navigate {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0px auto;
+  padding: 0px;
+  margin: 20px auto;
+
+  .container {
+    button {
+      margin-left: 20px;
+    }
+  }
+}
+
 .menu-btn {
   position: fixed;
   bottom: 20px;

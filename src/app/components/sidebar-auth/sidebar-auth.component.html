@@ -42,6 +42,23 @@
     ></button>
 
     <div class="content">
+      <div class="navigate">
+        <div class="container">
+          <button (click)="this.navigateTo('home')" pButton [rounded]="true">
+            Transações
+          </button>
+          <button
+            (click)="this.navigateTo('analitycs')"
+            pButton
+            [rounded]="true"
+          >
+            Analitycs
+          </button>
+          <button (click)="this.navigateTo('cards')" pButton [rounded]="true">
+            Cartões
+          </button>
+        </div>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
